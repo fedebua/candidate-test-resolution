@@ -1,8 +1,11 @@
 from nmigen import *
 from nmigen.cli import main
 from random import getrandbits
-import inlineAdapter
+from inlineAdapter import inlineAdapter
+import sys
 
+#For using this script to generate verilog: python3 generate.py generate -t v verilogGenerated.v
+#python3 generate.py (generate or simulate) -t (type --> v for verilog or il for RTLIL) (filename)
 class RegisterFile(Elaboratable):
     def __init__(self):
         self.adr   = Signal(4)
@@ -28,3 +31,6 @@ class RegisterFile(Elaboratable):
 if __name__ == "__main__":
     rf = RegisterFile()
     main(rf, ports=[rf.adr, rf.dat_r, rf.dat_w, rf.we])
+    inputFile = sys.argv[-1]
+    ia = inlineAdapter(inputPath = inputFile,outputMemPath = "memdump_result.mem", outputVerilogPath = inputFile) #Overwrites the inputFile
+    ia.modifyFile()

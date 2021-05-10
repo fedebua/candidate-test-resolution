@@ -6,7 +6,8 @@ class inlineAdapter():
 		self.inputPath = inputPath
 		self.outputMemPath = outputMemPath
 		self.outputVerilogPath = outputVerilogPath
-		
+
+	def modifyFile(self):
 		file = open(self.inputPath,"r")
 		text = file.read()
 		searchValue = re.search(r'initial begin\n((    \S*\[\S*\] = \S*;\n)*)  end\n',text)
@@ -45,5 +46,4 @@ class inlineAdapter():
 		verilogOutputFile.close()
 
 
-
-inlineAdapter(inputPath ="testcase.v",outputMemPath = "memdump_result.mem", outputVerilogPath = "result.v")	
+	
