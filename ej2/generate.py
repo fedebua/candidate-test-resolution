@@ -1,6 +1,7 @@
 from nmigen import *
 from nmigen.cli import main
 from random import getrandbits
+import inlineAdapter
 
 class RegisterFile(Elaboratable):
     def __init__(self):

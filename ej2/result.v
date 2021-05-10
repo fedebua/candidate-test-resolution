@@ -12,7 +12,8 @@ module top(dat_r, dat_w, we, clk, rst, adr);
   input rst;
   input we;
   reg [7:0] mem [15:0];
-  $readmemh(memdump_result.mem, mem);  reg [3:0] _0_;
+  $readmemh(memdump_result.mem, mem);
+  reg [3:0] _0_;
   always @(posedge clk) begin
     _0_ <= mem_r_addr;
     if (mem_w_en) mem[mem_w_addr] <= mem_w_data;
