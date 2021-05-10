@@ -22,9 +22,6 @@ class Stream(Record):
 		async def send(self, data):
 			self.valid <= 1
 			for d in data:
-				print("##############################################################################")
-				print("Send: "+str(d)) #3 values recieved befores crashes
-				print("##############################################################################")
 				self.data <= d
 				await RisingEdge(self.clk)
 				while self.ready.value == 0:
@@ -36,9 +33,6 @@ class Stream(Record):
 			data = []
 			for _ in range(count):
 				await RisingEdge(self.clk)
-				print("##############################################################################")
-				print("Received: "+str(self.data.value))
-				print("##############################################################################")
 				while self.valid.value == 0:
 					await RisingEdge(self.clk)
 				data.append(self.data.value.integer)
@@ -66,6 +60,7 @@ class Sumador(Elaboratable):
 				self.r.data.eq(self.a.data + self.b.data) #when a and b are accepted --> result = a+b and is valid
 			]
 		comb += self.a.ready.eq((~self.r.valid) | (self.r.accepted()))
+		comb += self.b.ready.eq((~self.r.valid) | (self.r.accepted()))
 		return m
 
 
@@ -97,7 +92,6 @@ async def burst(dut):
 		expected.append((data1[i] + data2[i]) &mask)
 		#print(str(data1[i])+"+"+str(data2[i])+"="+str(expected[i]))
 
-	print("data1:"+str(len(data1))+" data2:"+str(len(data2))+" expected:"+str(len(expected)))
 	cocotb.fork(stream_input_a.send(data1))
 	cocotb.fork(stream_input_b.send(data2))
 	recved = await stream_output.recv(N)

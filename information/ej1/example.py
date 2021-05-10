@@ -60,6 +60,7 @@ class Incrementador(Elaboratable):
                 self.r.data.eq(self.a.data + 1)
             ]
         comb += self.a.ready.eq((~self.r.valid) | (self.r.accepted()))
+        print("comb="+str(comb)+" /// r.valid ="+str(self.r.valid)+ " /// r.accepted ="+str(self.r.accepted))
         return m
 
 
