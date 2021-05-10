@@ -59,8 +59,9 @@ class Sumador(Elaboratable):
 				self.r.valid.eq(1),
 				self.r.data.eq(self.a.data + self.b.data) #when a and b are accepted --> result = a+b and is valid
 			]
-		comb += self.a.ready.eq((~self.r.valid) | (self.r.accepted()))
-		comb += self.b.ready.eq((~self.r.valid) | (self.r.accepted()))
+		with m.If(self.a.valid & self.b.valid):
+			comb += self.a.ready.eq(((~self.r.valid) | (self.r.accepted()))) #a will be ready when b is valid
+			comb += self.b.ready.eq(((~self.r.valid) | (self.r.accepted()))) #b will be ready when a is valid
 		return m
 
 
@@ -93,6 +94,8 @@ async def burst(dut):
 		#print(str(data1[i])+"+"+str(data2[i])+"="+str(expected[i]))
 
 	cocotb.fork(stream_input_a.send(data1))
+	await RisingEdge(dut.clk)
+	await RisingEdge(dut.clk)
 	cocotb.fork(stream_input_b.send(data2))
 	recved = await stream_output.recv(N)
 	assert recved == expected
